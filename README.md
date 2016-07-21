@@ -11,3 +11,6 @@ setting.php 用来请求ICMP时间戳
 由于本项目的socket访问了原始的网络协议，因此需要使用root权限来运行php文件
 参数在php文件里面修改(比如host等等)
 例如：sudo php myping.php
+##参考资料##
+《TCP/IP协议详解:卷一》
+数据封装: http://my.oschina.net/goal/blog/195749
