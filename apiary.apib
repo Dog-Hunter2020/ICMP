@@ -1,0 +1,296 @@
+FORMAT: 1A
+HOST: http://106.14.36.58:10086/RiskManage
+
+# 风险管理项目
+
+这是风险管理项目的API文档，API设计参考的是需求文档和界面设计文档，其中以界面设计为主
+
+
+## 风险统计 [/riskCount{?startTime,endTime,state,projectId,num}]
+
+### 获取风险的统计信息 [GET]
+
+这里获取风险的统计信息，过滤的条件有：开始时间，结束时间，状态的种类，项目
+返回值是一个风险列表，每个风险要说明出现的次数
+
++ Parameters
+    + startTime:`2016-08-09` (optional) - 统计的开始时间，默认为服务器当前时间 精确到天
+    + endTime:`2016-08-09`   (optional) - 统计的结束时间，默认为服务器当前时间 精确到天
+    + projectId   (number)    - 需要统计的项目的id
+    + num   (number,optional) - 需要列出的风险的个数
+        + Default: 10
+    + state (number)    - 状态，被识别最多 0，或者转化成问题最多1
+       
++ Response 200 (application/json)
+
+        [   
+            {
+                "riskName":"风险的名字1",
+                "count":"出现的次数 int"
+            },
+            {
+                "riskName":"风险的名字2",
+                "count":"出现的次数 int"
+            }
+        ]
++ Response 404 (application/json)
+
+        {"error_message":"项目不存在"}
+    
+## 风险 [/project/{id}/risks/{question}{?startTime,endTime,state}]
+
++ Parameters
+    + startTime:`2016-08-09` (optional) - 统计的开始时间，默认为服务器当前时间 精确到天
+    + endTime:`2016-08-09`   (optional) - 统计的结束时间，默认为服务器当前时间 精确到天
+    + state (number)    - 状态，被识别最多 0，或者转化成问题最多1
+    + question (optional) - 当给风险添加问题的时候使用
+
+### 获取项目下的所有风险 [GET]
+
++ Response 200 (application/json)
+
+        [
+             {
+            
+            "id": 14,
+            "title": "超出预算",
+            "uploaderId": 1,
+            "uploaderIcon":"http"
+           
+            }
+        ]
+    
+### 给风险新增问题 [PUT]
+
++ Request  (application/json)
+
+        {
+            "name":"question",
+            "content":"问题描述"
+        }
+        
++ Response 200 (text/plain)
+
+        true
+
+### 新建风险 [POST]
+
++ Request (application/json)
+
+        {"chance":7,
+        "content":"contentsss",
+        "id":1,
+        "influence":4,
+        "kindId":1,
+        "projectId":1,
+        "rcondition":"condition",
+        "title":"高卢战记",
+        "uploaderId":34,
+        "rCount":"被识别的次数，默认为0"
+        "trigger":"风中有朵雨做的云"
+        }
+        
++ Response 200 (application/json)
+
+        {
+        "chance": 1,
+        "content": "已经超出了开发预算",
+        "id": 14,
+        "influence": 1,
+        "kindId": 1,
+        "projectId": 2,
+        "rcondition": "正在监控",
+        "title": "超出预算",
+        "trigger": "钱花完了",
+        "uploaderId": 1,
+        "rCount":"被识别的次数",
+        "questionList":
+        [
+            {"content":"描述","time":"时间"}
+        ],
+        "userlist": [
+            {
+              "iconUrl": "http://img.woyaogexing.com/2016/10/23/91dbbe7838783e6d!200x200.jpg",
+              "id": 1,
+              "position": 0,
+              "username": "hsd"
+            },
+            {
+              "iconUrl": "http://img.woyaogexing.com/2016/10/23/cef2c861de31188b!200x200.jpg",
+              "id": 2,
+              "position": 1,
+              "username": "lfyl"
+            },
+            {
+              "iconUrl": "http",
+              "id": 35,
+              "position": 1,
+              "username": "zfy"
+            },
+            {
+              "iconUrl": "http://img.woyaogexing.com/2016/10/23/359c04eea0cd909c!200x200.jpg",
+              "id": 41,
+              "position": 0,
+              "username": "csc"
+            }
+          ]
+        }
+###更新风险的信息 [PATCH]
+
++ Request (application/json)
+
+        {"chance":7,
+            "content":"contentsss",
+            "id":1,
+            "influence":4,
+            "kindId":1,
+            "projectId":1,
+            "rcondition":"condition",
+            "title":"高卢战记",
+            "uploaderId":34,
+            "rCount":"被识别的次数，默认为0"
+            "trigger":"风中有朵雨做的云"
+            }
+
++ Response 200 (text/plain)
+
+        true
+
+    
+#风险计划 [/projects/{pid}]
+
+##风险计划列表 [/projects/{pid}/plans]
+
+    
+### 获取项目的风险计划列表 [GET]
+
++ Response 200 (application/json)
+
+            [
+        {
+            "id":1,
+            "name":"风险计划的名字",
+            "projectId":"项目的id",
+            "riskList":
+                [
+                    {
+                        "id":"风险条目的id",
+                        "name":"风险条目的名字",
+                        "createTime":"风险条目的创建时间",
+                        "userId":"1",
+                        "userIcon":"http://"
+                    }
+                ]
+        },
+        {
+            "id":2,
+            "name":"风险计划的名字",
+            "projectId":"项目的id",
+            "riskList":
+                [
+                    {
+                        "id":"风险条目的id",
+                        "name":"风险条目的名字",
+                        "createTime":"风险条目的创建时间",
+                        "userId":"1",
+                        "userIcon":"http://"
+                    }
+                ]
+        }
+            ]
+
+
+### 新建风险计划 [POST]
+
++ Request (application/json)
+
+    
+        {
+            "name":"风险计划的名字",
+            "projectId":"项目的id"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "id":1,
+            "name":"风险计划的名字",
+            "projectId":"项目的id",
+            "riskList":
+                [
+                    {
+                        "id":"风险条目的id",
+                        "name":"风险条目的名字",
+                        "createTime":"风险条目的创建时间",
+                        "userId":"1",
+                        "userIcon":"http://"
+                    }
+                ]
+        }
+
+
+## 风险计划 [/projects/{pid}/plans/{id}]
+
+### 根据id获取风险计划的信息 [GET]
+
++ Parameters
+
+    + id    (number,optional) - id用来说明是哪个风险计划
+    + pid (number) - 用来筛选特定项目下的风险计划
+    
+    
+
++ Response 200 (application/json)
+
+        {
+            "id":1,
+            "name":"风险计划的名字",
+            "projectId":"项目的id",
+            "riskList":
+                [
+                    {
+                        "id":"风险条目的id",
+                        "name":"风险条目的名字",
+                        "createTime":"风险条目的创建时间",
+                        "userId":"1",
+                        "userIcon":"http://"
+                    }
+                ]
+        }
+        
+
+### 删除风险计划 [DELETE]
+
++ Response 200 (text/plain)
+
+        true
+
++ Response 403(application/json)
+
+        {
+            "error_message":"错误信息"
+        }
+        
+### 给风险计划导入风险条目 [PUT]
+
++ Request (application/json)
+
+        {"planId":"计划的id","riskList":[1,2,3]}
+        
+
++ Response 200 (text/plain)
+
+
+        true
+    
+    
+##项目 [/projects{?ids}]
+
+###批量删除项目 [DELETE]
+
++ Parameters 
+    + ids:`1,2,3` - 需要批量删除的项目的id列表，用逗号分隔
+    
++ Response 200 (text/plain)
+
+        true
